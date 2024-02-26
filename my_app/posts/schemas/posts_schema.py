@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import Posts
+from posts.models import Posts
 
 class PostSchema(serializers.ModelSerializer):
     class Meta:

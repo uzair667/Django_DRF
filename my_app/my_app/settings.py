@@ -25,7 +25,9 @@ SECRET_KEY = 'django-insecure-mr+%wc8=+s&-0=fqdy76$=l2n-9%+o8!7q4j4)ba5m$6f=@b(#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+# ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'localhost:8000']
+
 
 
 # Application definition
@@ -38,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crud.apps.CrudConfig',
-    'rest_framework'
+    'rest_framework',
+    'posts.apps.PostsConfig',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
@@ -79,8 +83,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'django_db',
-        'USER': 'djangouser',
-        'PASSWORD': 'password',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -129,3 +133,10 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
