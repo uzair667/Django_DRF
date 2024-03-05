@@ -27,5 +27,6 @@ jobs:
         pip install -r my_app/requirements.txt
     - name: Run Tests
       run: |
-        my_app/python manage.py test
+        /home/cacf/Django_DRF/my_app/manage.py test
+        
 
