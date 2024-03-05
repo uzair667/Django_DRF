@@ -11,6 +11,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
+from my_app.exceptions import UnprocessableEntity
 
 
 def get_token(request):
@@ -52,7 +53,9 @@ class ListUsers(APIView):
     def get_queryset(self):
         return Users.objects.all()
     
-    def get(self, request):
+    def get(self, request, pk = None):
+        if pk:
+            user = Users.objects.filter(pk = pk).first()
         queryset = self.get_queryset()
         schema = UserSchema(queryset, many=True)
         return Response(schema.data, status=status.HTTP_200_OK)
@@ -88,6 +91,8 @@ class ListUsers(APIView):
     def delete(self, request, pk):
         try:
             instance = Users.objects.get(pk=pk)
+            if not instance:
+                raise UnprocessableEntity("User not found!")
         except Users.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 

@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  django_db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: django_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+
+    healthcheck:      
+      test: ["CMD-SHELL", "pg_isready -U postgres -d django_db -t 30"]
+      interval: 10s
+      timeout: 30s
+      retries: 10
+      start_period: 10s
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ../scripts:/docker-entrypoint-initdb.d
+
+  django_web:
+    build: .
+    command: >
+      bash -c "python manage.py makemigrations &&
+               python manage.py migrate &&
+               python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DB_URL=postgresql://postgres:postgres@django_db:5432/django_db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PW=postgres
+      - DB_NAME=django_db
+
+    volumes:
+      - .:/my_app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - django_db
+
+volumes:
+  postgres-data:
